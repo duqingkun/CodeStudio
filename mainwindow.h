@@ -10,6 +10,7 @@ namespace Ui {
 class MainWindow;
 }
 
+class QTreeWidget;
 class QsciScintilla;
 
 class MainWindow : public QMainWindow
@@ -31,6 +32,7 @@ private:
 private:
     Ui::MainWindow *ui;
 
+    QTreeWidget     *mFileManager;
     QsciScintilla   *mMainEditor;
 };
 

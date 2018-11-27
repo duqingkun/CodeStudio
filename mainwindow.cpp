@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 
 #include <QDebug>
+#include <QTreeWidget>
+#include <QSplitter>
 #include <Qsci/qsciscintilla.h>
 #include <Qsci/qscilexercsharp.h>
 #include <Qsci/qsciapis.h>
@@ -10,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
   , mMainEditor(0)
+  , mFileManager(0)
 {
     ui->setupUi(this);
 
@@ -46,8 +49,18 @@ void MainWindow::linesChanged()
 
 void MainWindow::initUI()
 {
+    mFileManager = new QTreeWidget;
     mMainEditor = new QsciScintilla;
-    this->setCentralWidget(mMainEditor);
+    QSplitter *splitter = new QSplitter(Qt::Horizontal);
+    splitter->addWidget(mFileManager);
+    splitter->addWidget(mMainEditor);
+    setCentralWidget(splitter);
+
+    splitter->setCollapsible(0, true);
+    splitter->setCollapsible(1, false);
+    splitter->setHandleWidth(0);
+    splitter->setStretchFactor(0, 1);
+    splitter->setStretchFactor(1, 5);
 
     //行号
     mMainEditor->setMarginsForegroundColor(Qt::black);       //字体颜色
@@ -57,10 +70,10 @@ void MainWindow::initUI()
 
     //行号区的图标
     mMainEditor->setMarginType(BREAKPOINT_MARGIN, QsciScintilla::SymbolMargin);
-    mMainEditor->setMarginWidth(BREAKPOINT_MARGIN, "00000");
+    mMainEditor->setMarginWidth(BREAKPOINT_MARGIN, "");
     //mMainEditor->markerDefine();  //设置相应margin鼠标点击后显示的图标,如断点等
     mMainEditor->markerDefine(QsciScintilla::Circle, 0);
-    mMainEditor->markerAdd(0, 0);   //测试 0表示第一行
+    //mMainEditor->markerAdd(0, 0);   //测试 0表示第一行
 
     //自动补全
     mMainEditor->setAutoCompletionThreshold(1);
